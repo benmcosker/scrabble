@@ -1,17 +1,21 @@
 {
-  "name": "angularjs-exercise",
+  "name": "scrabble-word-finder",
   "version": "1.0.0",
-  "description": "AngularJS exercise - currency exchange",
+  "description": "Scrabble word finder",
   "main": "app.js",
+  "scripts": {
+    "serve": "./node_modules/.bin/lite-server"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/benmcosker/angularjs-exercise"
+    "url": "https://github.com/benmcosker/scrabble"
   },
-  "author": "Ben McOsker <bmcosker@kenzan.com>",
+  "author": "Ben McOsker <benmcosker@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "angular-sanitize": "1.5.5",
+    "angular": "^1.4.10",
+    "install": "^0.8.7",
     "lite-server": "2.2.0",
-    "underscore": "^1.8.3"
+    "underscore": "1.8.3"
   }
 }

@@ -1,61 +1,78 @@
 <!doctype html>
 <html ng-app="app">
     <head>
+        <title>Scrabble</title>
         <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300,900' rel='stylesheet' type='text/css'>
         <link href="https://s3.amazonaws.com/codecademy-content/projects/bootstrap.min.css" rel="stylesheet" />
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
         <link href="css/main.css" rel="stylesheet" />
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.10/angular.min.js"></script>
-        <script type="text/javascript" src="node_modules/angular-sanitize/angular-sanitize.min.js"></script>
-        <script type="text/javascript" src="node_modules/underscore/underscore-min.js"></script>
 
     </head>
     <body>
-        <div class="container">
+
             <div ng-controller="homeController as ctrl">
-                <div class="col-md-4">
-                    <form class="form-scrabble" ng-submit="ctrl.submit()" name="form">
-                        <h2 class="form-scrabble-heading">Play Scrabble</h2>
-                        <div class="form-group">
-                            <label for="inputRack" class="sr-only">Rack</label>
-                            <input ng-model="ctrl.model.rack" type="text" name="inputRack" id="inputRack" class="form-control" placeholder="Rack input" maxlength="7" ng-pattern="/^[a-zA-Z\s]*$/"  required autofocus />
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <form class="form-scrabble" ng-submit="ctrl.submit()" name="form">
+                                <h2 class="form-scrabble-heading">Play Scrabble</h2>
+                                <div class="form-group">
+                                    <label for="inputRack" class="sr-only">Rack</label>
+                                    <input ng-model="ctrl.model.rack" type="text" name="inputRack" id="inputRack" class="form-control" placeholder="Rack input"  ng-pattern="/^[a-zA-Z\s]*$/"   autofocus />
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputWord" class="sr-only">Word</label>
+                                    <input ng-model="ctrl.model.word" type="text" name="inputWord" id="inputWord" class="form-control"  ng-pattern="/^[a-zA-Z\s]*$/" placeholder="Word Input"  />
+                                </div>
+                                <button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="form.$invalid || ctrl.errorLetters|| ctrl.foundWords">Play This Move</button>
+                                <div class="form-group top-20">
+                                    <div class="alert alert-danger" ng-show="ctrl.invalidInput" ng-cloak>
+                                        <strong>Error!</strong> Words must be 7 characters or less on the rack entry (and are required), between 2 and 15 characters in the word entry (not required).
+                                    </div>
+                                    <div class="alert alert-danger" ng-show="form.inputRack.$error.pattern" ng-cloak>
+                                        <strong>Error!</strong> You can only play letters in Scrabble, numbers and other characters are not valid.
+                                    </div>
+                                    <div class="alert alert-danger" ng-show="ctrl.errorLetters"  ng-cloak>
+                                        <strong>Error!</strong> You have tried to play a letter that is not allowed. Quantities of each letter in the game are limited.
+                                    </div>
+                                    <div ng-show="ctrl.errorLetters || form.inputRack.$error.pattern || ctrl.invalidInput"  ng-cloak>
+                                        <button class="button btn-lg btn-success reset" ng-click="ctrl.reset()">Reset</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                        <div class="form-group">
-                            <label for="inputWord" class="sr-only">Word</label>
-                            <input ng-model="ctrl.model.word" type="text" name="inputWord" id="inputWord" class="form-control" ng-pattern="/^[a-zA-Z\s]*$/" placeholder="Word Input"  />
+                        <i class="fa fa-spinner fa-spin waiting" ng-show="ctrl.submitted && !ctrl.foundWords" ng-cloak></i>
+                        <div class="col-md-4" ng-show="ctrl.foundWords && !ctrl.errorLetters" ng-cloak>
+                            <h2>Found Word(s)</h2>
+                            <p ng-show="!ctrl.foundWords.word" ng-cloak>No words</p>
+                            <p>{{ctrl.foundWords.word}}</p>
+                            <p ng-show="ctrl.foundWords.word" ng-cloak>This is a {{ctrl.foundWords.score}} point word, not bad!</p>
+                            <button class="button btn-lg btn-success reset" ng-click="ctrl.reset()">Play Again</button>
                         </div>
-                        <div class="form-group">
-                            <div class="alert alert-danger" ng-show="ctrl.invalidInput" ng-cloak>
-                                <strong>Error!</strong> Words must be 15 letters or less.
-                            </div>
-                            <div class="alert alert-danger" ng-show="form.inputRack.$error.pattern || form.inputWord.$error.pattern" ng-cloak>
-                                <strong>Error!</strong> You can only play letters in Scrabble, numbers and other characters are not valid.
-                            </div>
-                            <div class="alert alert-danger" ng-show="ctrl.errorLetters.letter.length > 0"  ng-cloak>
-                                <strong>Error!</strong> You have tried to play a letter that is not allowed because of there are limited amounts of tiles for each letter.
-                            </div>
-                        </div>
-                        <button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="form.$invalid">Play This Move</button>
-                    </form>
+                    </div>
                 </div>
             </div>
 
-        </div>
 
+        <!-- Vendors -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.10/angular.min.js"></script>
+        <script type="text/javascript" src="node_modules/underscore/underscore-min.js"></script>
 
         <!-- Modules -->
         <script src="js/app.js"></script>
 
-        <!-- Constants/Values-->
-        <script src="js/values/letter.value.js"></script>
-        <script src="js/values/word.value.js"></script>
+        <!-- Constants-->
+        <script src="js/constants/letter.constant.js"></script>
+        <script src="js/constants/word.constant.js"></script>
 
         <!-- Controllers -->
         <script src="js/controllers/home.controller.js"></script>
 
         <!-- Services  -->
         <script src="js/services/letter.service.js"></script>
-
-
+        <script src="js/services/score.service.js"></script>
+        <script src="js/services/word.finder.service.js"></script>
+        <script src="js/services/word.parse.service.js"></script>
 
     </body>
 </html>

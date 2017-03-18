@@ -2,6 +2,6 @@
   'use strict';
 
   angular
-    .module('app', ['ngSanitize'])
+    .module('app', [])
     .constant('_', window._);
 })(angular);

@@ -6,74 +6,58 @@
       .controller('homeController', homeController);
 
 
-  homeController.$inject = ['letterValue', 'wordValue'];
+  homeController.$inject = ['letterService', 'wordParseService' , '$timeout'];
 
 
-  function homeController(letterValue, wordValue) {
+  function homeController(letterService, wordParseService, $timeout) {
 
     /* jshint validthis: true */
     var vm = this;
+
+    vm.errorLetters = false;
     vm.invalidInput = false;
     vm.model = {
       rack: '',
-      word: '',
-      allowed: ''
+      word: ''
     };
-
-    vm.errorLetters = {
-      letter: ''
-    };
+    vm.submitted = false;
 
 
-    var combinedInput;
-    var letterList = letterValue.letter;
-    var uniqueLetters;
-    var inputCharacterCount = {
-      letter: '',
-      count: '',
-      allowed: ''
+    vm.reset = function () {
+      vm.submitted = false;
+      vm.model.rack = '';
+      vm.model.word = '';
+      vm.errorLetters = false;
+      vm.foundWords = '';
     };
 
     vm.submit = function () {
+
       if (checkWordLength()) {
-        console.log('passed');
-        parseInput();
+        if (!letterService.checkIfValid(vm.model.rack, vm.model.word)) {
+          vm.errorLetters = !vm.errorLetters;
+        } else {
+
+          $timeout(activeSpinner(), 100).then(function() {
+            vm.foundWords = wordParseService.returnWord(vm.model.rack, vm.model.word);
+          });
+
+        }
       } else {
-        console.log('failed');
         displayInvalidInputError();
       }
     };
 
-    function countOccurances(string, char) {
-      var re = new RegExp(char,'gi');
-      return string.match(re).length;
-    }
-
-    function parseInput () {
-      combinedInput = (vm.model.rack + vm.model.word).toUpperCase();
-      uniqueLetters = _.uniq(combinedInput);
-      for (var i=0; i < uniqueLetters.length; i+=1) {
-        inputCharacterCount[i] = {
-          letter: uniqueLetters[i],
-          count: countOccurances(combinedInput, uniqueLetters[i]),
-          allowed: _.findWhere(letterList, {letter: uniqueLetters[i]}).count
-        };
-
-        if (inputCharacterCount[i].count > inputCharacterCount[i].allowed) {
-          vm.errorLetters = {
-            letter: uniqueLetters[i]
-          };
-        }
-      }
-    }
-
-
-    function displayInvalidInputError () {
-      vm.invalidInput = !vm.invalidInput;
+    function activeSpinner () {
+      return vm.submitted = true;
     }
 
     function checkWordLength () {
-      return (vm.model.rack.length > 0) && vm.model.rack.length + vm.model.word.length <= 15;
+      return (vm.model.rack.length > 0 && vm.model.rack.length <= 7) && (vm.model.word.length <= 15)  && (vm.model.word.length !== 1);
+    }
+
+    function displayInvalidInputError () {
+      vm.invalidInput = !vm.invalidInput;
     }
 
   }
