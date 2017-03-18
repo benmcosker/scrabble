@@ -1,0 +1,17 @@
+{
+  "name": "angularjs-exercise",
+  "version": "1.0.0",
+  "description": "AngularJS exercise - currency exchange",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benmcosker/angularjs-exercise"
+  },
+  "author": "Ben McOsker <bmcosker@kenzan.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "angular-sanitize": "1.5.5",
+    "lite-server": "2.2.0",
+    "underscore": "^1.8.3"
+  }
+}

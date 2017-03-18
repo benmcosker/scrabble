@@ -1,0 +1,61 @@
+<!doctype html>
+<html ng-app="app">
+    <head>
+        <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300,900' rel='stylesheet' type='text/css'>
+        <link href="https://s3.amazonaws.com/codecademy-content/projects/bootstrap.min.css" rel="stylesheet" />
+        <link href="css/main.css" rel="stylesheet" />
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.10/angular.min.js"></script>
+        <script type="text/javascript" src="node_modules/angular-sanitize/angular-sanitize.min.js"></script>
+        <script type="text/javascript" src="node_modules/underscore/underscore-min.js"></script>
+
+    </head>
+    <body>
+        <div class="container">
+            <div ng-controller="homeController as ctrl">
+                <div class="col-md-4">
+                    <form class="form-scrabble" ng-submit="ctrl.submit()" name="form">
+                        <h2 class="form-scrabble-heading">Play Scrabble</h2>
+                        <div class="form-group">
+                            <label for="inputRack" class="sr-only">Rack</label>
+                            <input ng-model="ctrl.model.rack" type="text" name="inputRack" id="inputRack" class="form-control" placeholder="Rack input" maxlength="7" ng-pattern="/^[a-zA-Z\s]*$/"  required autofocus />
+                        </div>
+                        <div class="form-group">
+                            <label for="inputWord" class="sr-only">Word</label>
+                            <input ng-model="ctrl.model.word" type="text" name="inputWord" id="inputWord" class="form-control" ng-pattern="/^[a-zA-Z\s]*$/" placeholder="Word Input"  />
+                        </div>
+                        <div class="form-group">
+                            <div class="alert alert-danger" ng-show="ctrl.invalidInput" ng-cloak>
+                                <strong>Error!</strong> Words must be 15 letters or less.
+                            </div>
+                            <div class="alert alert-danger" ng-show="form.inputRack.$error.pattern || form.inputWord.$error.pattern" ng-cloak>
+                                <strong>Error!</strong> You can only play letters in Scrabble, numbers and other characters are not valid.
+                            </div>
+                            <div class="alert alert-danger" ng-show="ctrl.errorLetters.letter.length > 0"  ng-cloak>
+                                <strong>Error!</strong> You have tried to play a letter that is not allowed because of there are limited amounts of tiles for each letter.
+                            </div>
+                        </div>
+                        <button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="form.$invalid">Play This Move</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- Modules -->
+        <script src="js/app.js"></script>
+
+        <!-- Constants/Values-->
+        <script src="js/values/letter.value.js"></script>
+        <script src="js/values/word.value.js"></script>
+
+        <!-- Controllers -->
+        <script src="js/controllers/home.controller.js"></script>
+
+        <!-- Services  -->
+        <script src="js/services/letter.service.js"></script>
+
+
+
+    </body>
+</html>
