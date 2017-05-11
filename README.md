@@ -1,4 +1,4 @@
-# scabble-exercise
+# scabble
 
 ## Overview
 A Scrabble word finder application
